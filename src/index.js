@@ -7,9 +7,11 @@ var jsonParser = require('body-parser').json;
 
 var app = express();
 
+//MONGOOSE / MONGO Database
 require('./database');
 
-var routes = require('./routes.js');
+//ROUTES
+var routes = require('./routes');
 
 // set our port
 app.set('port', process.env.PORT || 5000);
@@ -21,7 +23,9 @@ app.use(jsonParser());
 
 // setup our static route to serve files from the "public" folder
 app.use('/', express.static('public'));
-app.use('/api', routes);
+app.use('/api', routes.course);
+app.use('/api', routes.review);
+app.use('/api', routes.user);
 
 // Set up error handlers.
 // Add a global error handler middleware function that writes error information to the response in the JSON format.

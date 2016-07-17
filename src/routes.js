@@ -3,9 +3,18 @@
 var express = require('express');
 var router = express.Router();
 
-//GET /api/courses 200 - Returns the Course "_id" and "title" properties
+var courses = require('./data/data.json');
+
+// GET /api/courses 200 - Returns the Course "_id" and "title" properties
 router.get('/courses', function (req, res, next) {
-  res.json('You sent a GET request to return all courses');
+  // Update the GET /api/courses route to return static data.
+  // Return an array of object literals with "_id" and "title" properties
+  var allCourses = {};
+  var data = [];
+  allCourses.data = data;
+  allCourses.data.push(courses.courses.one);
+  allCourses.data.push(courses.courses.two);
+  res.json(allCourses);
 });
 
 // GET /api/courses/:id 200 - Returns all Course properties and related documents for the provided course ID

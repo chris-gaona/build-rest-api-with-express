@@ -5,10 +5,13 @@ var express = require('express');
 var morgan = require('morgan');
 var jsonParser = require('body-parser').json;
 
-var app = express();
-
+require('./models/courses');
+require('./models/reviews');
+require('./models/users');
 //MONGOOSE / MONGO Database
 require('./database');
+
+var app = express();
 
 //ROUTES
 var routes = require('./routes');

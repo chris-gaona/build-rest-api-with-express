@@ -17,5 +17,8 @@ db.on('error', function (err) {
 });
 
 db.once('open', function () {
+  // seed database
+  require('./seed');
+  
   console.log('db connection successful');
 });

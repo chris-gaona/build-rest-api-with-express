@@ -13,15 +13,25 @@ var mongoose = require('mongoose');
 // reviews (Array of ObjectId values, _id values from the reviews collection)
 
 var CourseSchema = new mongoose.Schema({
-  user: UserSchema,
+  user: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   title: String,
   description: String,
   estimatedTime: String,
   materialsNeeded: String,
-  steps: [],
-  reviews: []
+  steps: [{
+    stepNumber: Number,
+    title: String,
+    description: String
+  }],
+  reviews: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Review'
+  }]
 });
 
-var Course = mongoose.model('CourseSchema', CourseSchema);
+var Course = mongoose.model('Course', CourseSchema);
 
-module.exports.Course = Course;
+module.exports = Course;

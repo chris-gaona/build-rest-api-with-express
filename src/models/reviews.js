@@ -10,12 +10,21 @@ var mongoose = require('mongoose');
 // review (String)
 
 var ReviewSchema = new mongoose.Schema({
-  user: UserSchema,
-  postedOn: Date,
-  rating: Number,
+  user: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  postedOn: {
+    type: Date,
+    default: Date.now
+  },
+  rating: {
+    type: Number,
+    default: 0
+  },
   review: String
 });
 
-var Review = mongoose.model('ReviewSchema', ReviewSchema);
+var Review = mongoose.model('Review', ReviewSchema);
 
-module.exports.Review = Review;
+module.exports = Review;

@@ -10,10 +10,13 @@ var mongoose = require('mongoose');
 
 var UserSchema = new mongoose.Schema({
   fullName: String,
-  emailAddress: String,
+  emailAddress: {
+    type: String,
+    unique: true
+  },
   hashedPassword: String
 });
 
-var User = mongoose.model('UserSchema', UserSchema);
+var User = mongoose.model('User', UserSchema);
 
-module.exports.User = User;
+module.exports = User;

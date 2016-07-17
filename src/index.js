@@ -7,6 +7,8 @@ var jsonParser = require('body-parser').json;
 
 var app = express();
 
+require('./database');
+
 var routes = require('./routes.js');
 
 // set our port

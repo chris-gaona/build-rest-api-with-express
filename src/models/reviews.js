@@ -10,10 +10,10 @@ var mongoose = require('mongoose');
 // review (String)
 
 var ReviewSchema = new mongoose.Schema({
-  user: [{
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }],
+  },
   postedOn: {
     type: Date,
     default: Date.now

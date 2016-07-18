@@ -3,23 +3,53 @@
 var express = require('express');
 var router = express.Router();
 
+var Course = require('../models/courses');
+var Review = require('../models/reviews');
+var User = require('../models/users');
+
 var courses = require('../data/data.json');
+
+//creates middleware for all post urls to go through first
+router.param('id', function(req, res, next, id) {
+  var query = Course.findById(id).populate('reviews');
+
+  query.exec(function(err, course) {
+    if (err) {return next(err)}
+
+    if(!course) {
+      return next(new Error('can\'t find course'));
+    }
+
+    req.course = course;
+    return next();
+  });
+});
 
 // GET /api/courses 200 - Returns the Course "_id" and "title" properties
 router.get('/courses', function (req, res, next) {
-  // Update the GET /api/courses route to return static data.
-  // Return an array of object literals with "_id" and "title" properties
-  var allCourses = {};
-  var data = [];
-  allCourses.data = data;
-  allCourses.data.push(courses.courses.one);
-  allCourses.data.push(courses.courses.two);
-  res.json(allCourses);
+  Course.find(function (err, courses) {
+    if(err) return next(err);
+    var allCourses = {};
+    allCourses.data = courses;
+    res.json(allCourses);
+  });
 });
 
 // GET /api/courses/:id 200 - Returns all Course properties and related documents for the provided course ID
 router.get('/courses/:id', function (req, res, next) {
-  res.json('You sent a GET request for a specific course: ' + req.params.id);
+  var options = [
+    { path: 'reviews.user' },
+    { path: 'user' }
+  ];
+
+  User.populate(req.course, options, function (err, course) {
+    if(err) return next(err);
+
+    var oneCourse = {};
+    oneCourse.data = [];
+    oneCourse.data.push(course);
+    res.json(oneCourse);
+  });
 });
 
 // POST /api/courses 201 - Creates a course, sets the Location header, and returns no content

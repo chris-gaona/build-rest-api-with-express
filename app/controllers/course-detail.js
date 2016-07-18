@@ -33,7 +33,7 @@ function CourseDetailController(dataService, errorHandlerService, sessionService
     // only allow the user to post a review if...
     // 1) we have an authenticated user
     // 2) they're not the course owner (you can't review your own course)
-    return (_this.userIsAuthenticated && this.course && this.course.user && 
+    return (_this.userIsAuthenticated && this.course && this.course.user &&
       _this.course.user._id !== _this.currentUserId);
   };
 
@@ -51,7 +51,7 @@ function CourseDetailController(dataService, errorHandlerService, sessionService
         getCourse();
       },
       function(response) {
-        errorHandlerService.handleError(response);        
+        errorHandlerService.handleError(response);
       });
   };
 

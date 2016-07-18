@@ -13,10 +13,10 @@ var mongoose = require('mongoose');
 // reviews (Array of ObjectId values, _id values from the reviews collection)
 
 var CourseSchema = new mongoose.Schema({
-  user: [{
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }],
+  },
   title: String,
   description: String,
   estimatedTime: String,

@@ -9,6 +9,8 @@ var User = require('../models/users');
 
 var courses = require('../data/data.json');
 
+var auth = require('../auth.js');
+
 //creates middleware for all post urls to go through first
 router.param('id', function(req, res, next, id) {
   var query = Course.findById(id).populate('reviews');
@@ -53,7 +55,7 @@ router.get('/courses/:id', function (req, res, next) {
 });
 
 // POST /api/courses 201 - Creates a course, sets the Location header, and returns no content
-router.post('/courses', function (req, res, next) {
+router.post('/courses', auth, function (req, res, next) {
   var course = new Course(req.body);
   course.save(function (err) {
     console.log(err);
@@ -82,7 +84,7 @@ router.post('/courses', function (req, res, next) {
 });
 
 // PUT /api/courses/:id 204 - Updates a course and returns no content
-router.put('/courses/:id', function (req, res, next) {
+router.put('/courses/:id', auth, function (req, res, next) {
   req.course.update(req.body, { runValidators: true }, function(err, course) {
     console.log(err);
     if (err) {

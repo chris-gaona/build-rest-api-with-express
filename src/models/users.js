@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var Validator = require('validator');
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
 
@@ -13,12 +14,11 @@ var saltRounds = 10;
 var UserSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: true
+    required: [true, 'Full name is required']
   },
   emailAddress: {
     type: String,
-    unique: true,
-    required: true
+    required: [true, 'Email address is required']
   },
   hashedPassword: {
     type: String,
@@ -26,16 +26,25 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.pre('save', function (next) {
-  var user = this;
+UserSchema.methods.setPassword = function(password){
   // Update the User model to store the user's password as a hashed value.
-  bcrypt.hash(user.hashedPassword, saltRounds, function(err, hash) {
-    if(err) return next(err);
-    // Store hash in your password DB.
-    user.hashedPassword = hash;
-    next();
+  var salt = bcrypt.genSaltSync(saltRounds);
+  this.hashedPassword = bcrypt.hashSync(password, salt);
+};
+
+UserSchema.path('emailAddress').validate(function (v) {
+  return Validator.isEmail(v);
+}, 'Please provide a valid email address.');
+
+UserSchema.path('emailAddress').validate(function(value, done) {
+  this.model('User').count({ emailAddress: value }, function(err, count) {
+      if (err) {
+          return done(err);
+      }
+      // If `count` is greater than zero, "invalidate"
+      done(!count);
   });
-});
+}, 'The email address you provided is already in use.');
 
 var User = mongoose.model('User', UserSchema);
 

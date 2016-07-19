@@ -20,7 +20,10 @@ var ReviewSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    default: 0
+    default: 0,
+    required: [true, 'Rating is required'],
+    min: 1,
+    max: 5
   },
   review: String
 });

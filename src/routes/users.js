@@ -15,14 +15,15 @@ router.get('/users', function (req, res, next) {
 });
 
 // POST /api/users 201 - Creates a user, sets the Location header to "/", and returns no content
+// "message": "Validation Failed", "errors": { "property": [ { "code": "", "message": "" }, ... ] } }
 router.post('/users', function (req, res, next) {
-  if(!req.body.password || !req.body.confirmPassword){
+  if (!req.body.password || !req.body.confirmPassword){
     return res.status(400).json({
-      message: 'Please fill out all fields'
+      message: "Validation Failed", errors: { property: [ { code: 400, message: "Please fill out all fields" } ] }
     });
   } else if (req.body.password !== req.body.confirmPassword) {
     return res.status(400).json({
-      message: 'Password & confirm password do not match'
+      message: "Validation Failed", errors: { property: [ { code: 400, message: "Password & confirm password do not match" } ] }
     });
   }
   var user = new User();
@@ -33,13 +34,23 @@ router.post('/users', function (req, res, next) {
 
   user.save(function (err) {
     console.log(err);
-    if(err) {
-      res.status(400);
-      res.json(err.errors);
-      return;
+    if (err) {
+      if (err.name === 'ValidationError') {
+        if (err.errors.fullName) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.fullName.message } ] }
+          });
+        } else if (err.errors.emailAddress) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.emailAddress.message } ] }
+          });
+        }
+      } else {
+        return next(err);
+      }
     }
     res.status(201);
-    res.json({message: 'success'});
+    res.end();
   });
 });
 

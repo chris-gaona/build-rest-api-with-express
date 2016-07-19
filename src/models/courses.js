@@ -30,12 +30,10 @@ var CourseSchema = new mongoose.Schema({
   steps: [{
     stepNumber: Number,
     title: {
-      type: String,
-      required: [true, 'Step title is required']
+      type: String
     },
     description: {
-      type: String,
-      required: [true, 'Step description is required']
+      type: String
     }
   }],
   reviews: [{
@@ -43,6 +41,15 @@ var CourseSchema = new mongoose.Schema({
     ref: 'Review'
   }]
 });
+
+CourseSchema.path('steps').validate(function(steps){
+    if (!steps) {
+      return false;
+    } else if (steps.length === 0) {
+      return false;
+    }
+    return true;
+}, 'Steps needs to have at least one feature');
 
 // Update the Course schema with an overallRating virtual property.
 // overallRating is a calculated, read only property that returns the average of all of the review ratings for this course rounded to the nearest whole number.

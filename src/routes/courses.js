@@ -54,12 +54,60 @@ router.get('/courses/:id', function (req, res, next) {
 
 // POST /api/courses 201 - Creates a course, sets the Location header, and returns no content
 router.post('/courses', function (req, res, next) {
-  res.status(201).json('You sent a POST request to create a new course');
+  var course = new Course(req.body);
+  course.save(function (err) {
+    console.log(err);
+    if (err) {
+      if (err.name === 'ValidationError') {
+        if (err.errors.title) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.title.message } ] }
+          });
+        } else if (err.errors.description) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.description.message } ] }
+          });
+        } else if (err.errors.steps) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.steps.message } ] }
+          });
+        }
+      } else {
+        return next(err);
+      }
+    }
+    res.status(201);
+    res.end();
+  });
 });
 
 // PUT /api/courses/:id 204 - Updates a course and returns no content
 router.put('/courses/:id', function (req, res, next) {
-  res.status(204).json('You sent a PUT request to update a course: ' + req.params.id);
+  req.course.update(req.body, { runValidators: true }, function(err, course) {
+    console.log(err);
+    if (err) {
+      if (err.name === 'ValidationError') {
+        if (err.errors.title) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.title.message } ] }
+          });
+        } else if (err.errors.description) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.description.message } ] }
+          });
+        } else if (err.errors.steps) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.steps.message } ] }
+          });
+        }
+      } else {
+        return next(err);
+      }
+    }
+
+    res.status(204);
+    res.end();
+  });
 });
 
 module.exports = router;

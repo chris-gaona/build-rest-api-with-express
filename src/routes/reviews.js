@@ -14,6 +14,18 @@ var auth = require('../auth.js');
 // POST /api/courses/:courseId/reviews 201 - Creates a review for the specified course ID, sets the Location header to the related course, and returns no content
 router.post('/courses/:courseId/reviews', auth, function (req, res, next) {
   var review = new Review(req.body);
+  review.user = req.user;
+
+  Course.findOne({_id: req.params.courseId}, 'reviews', function (err, course) {
+    if (err) {return next(err);}
+
+    course.reviews.push(review);
+
+    course.save(function(err) {
+      if(err){ return next(err); }
+    });
+  });
+
   review.save(function (err) {
     console.log(err);
     if (err) {
@@ -32,7 +44,23 @@ router.post('/courses/:courseId/reviews', auth, function (req, res, next) {
 
 // DELETE /api/courses/:courseId/reviews/:id 204 - Deletes the specified review and returns no content
 router.delete('/courses/:courseId/reviews/:id', auth, function (req, res, next) {
-  res.status(204).json('You sent a DELETE request to delete a review: ' + req.params.id);
+  Review.remove({_id: req.params.id}, function (err) {
+    if (err) {return next(err);}
+  });
+
+  Course.findOne({_id: req.params.courseId}, 'reviews', function (err, course) {
+    if (err) {return next(err);}
+
+    //splice out the deleted post from userPosts array
+    course.reviews.splice(course.reviews.indexOf(req.params.id), 1);
+
+    course.save(function(err) {
+      if(err){ return next(err); }
+    });
+  });
+
+  res.status(204);
+  res.end();
 });
 
 module.exports = router;

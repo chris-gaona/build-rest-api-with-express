@@ -9,14 +9,19 @@ var User = require('../models/users');
 
 var courses = require('../data/data.json');
 
+var auth = require('../auth.js');
+
 // GET /api/users 200 - Returns the currently authenticated user
-router.get('/users', function (req, res, next) {
-  res.json('You sent a GET request to find the current user');
+router.get('/users', auth, function (req, res, next) {
+  var authUser = {};
+  authUser.data = [];
+  authUser.data.push(req.user);
+  res.json(authUser);
 });
 
 // POST /api/users 201 - Creates a user, sets the Location header to "/", and returns no content
 // "message": "Validation Failed", "errors": { "property": [ { "code": "", "message": "" }, ... ] } }
-router.post('/users', function (req, res, next) {
+router.post('/users', auth, function (req, res, next) {
   if (!req.body.password || !req.body.confirmPassword){
     return res.status(400).json({
       message: "Validation Failed", errors: { property: [ { code: 400, message: "Please fill out all fields" } ] }

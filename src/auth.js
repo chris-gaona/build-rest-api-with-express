@@ -7,29 +7,34 @@ var saltRounds = 10;
 
 var auth = function (req, res, next) {
   function unauthorized(res) {
-    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    // res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     return res.send(401);
   }
 
   var user = basicAuth(req);
+  console.log(user);
 
-  if (!user || !user.emailAddress || !user.password) {
+  if (!user || !user.name || !user.pass) {
     return unauthorized(res);
-  }
+  } else {
+    User.findOne({emailAddress: user.name}, function (err, email) {
+      console.log(err);
+      if(err) return next(err);
 
-  User.findOne({'emailAddress': user.emailAddress}, function (err, user) {
-    if(err) return next(err);
-
-    if (user) {
-      if (bcrypt.compareSync(user.password, user.hashedPassword)) {
-        return next();
+      if (email) {
+        console.log('Email: ' + email);
+        if (bcrypt.compareSync(user.pass, email.hashedPassword)) {
+          req.user = email;
+          return next();
+        } else {
+          return unauthorized(res);
+        }
       } else {
+        console.log('nope')
         return unauthorized(res);
       }
-    } else {
-      return unauthorized(res);
-    }
-  });
+    });
+  }
 };
 
 module.exports = auth;

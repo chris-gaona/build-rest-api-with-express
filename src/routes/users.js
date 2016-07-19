@@ -21,7 +21,7 @@ router.get('/users', auth, function (req, res, next) {
 
 // POST /api/users 201 - Creates a user, sets the Location header to "/", and returns no content
 // "message": "Validation Failed", "errors": { "property": [ { "code": "", "message": "" }, ... ] } }
-router.post('/users', auth, function (req, res, next) {
+router.post('/users', function (req, res, next) {
   if (!req.body.password || !req.body.confirmPassword){
     return res.status(400).json({
       message: "Validation Failed", errors: { property: [ { code: 400, message: "Please fill out all fields" } ] }

@@ -57,6 +57,7 @@ router.get('/courses/:id', function (req, res, next) {
 // POST /api/courses 201 - Creates a course, sets the Location header, and returns no content
 router.post('/courses', auth, function (req, res, next) {
   var course = new Course(req.body);
+
   course.save(function (err) {
     console.log(err);
     if (err) {

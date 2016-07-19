@@ -12,7 +12,6 @@ var auth = function (req, res, next) {
   }
 
   var user = basicAuth(req);
-  console.log(user);
 
   if (!user || !user.name || !user.pass) {
     return unauthorized(res);
@@ -22,7 +21,6 @@ var auth = function (req, res, next) {
       if(err) return next(err);
 
       if (email) {
-        console.log('Email: ' + email);
         if (bcrypt.compareSync(user.pass, email.hashedPassword)) {
           req.user = email;
           return next();

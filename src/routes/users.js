@@ -13,6 +13,7 @@ var auth = require('../auth.js');
 
 // GET /api/users 200 - Returns the currently authenticated user
 router.get('/users', auth, function (req, res, next) {
+  // Don't allow anything other than the current user's information to be returned from the GET /api/users route.
   var authUser = {};
   authUser.data = [];
   authUser.data.push(req.user);
@@ -57,6 +58,21 @@ router.post('/users', function (req, res, next) {
     res.status(201);
     res.end();
   });
+});
+
+/*********************/
+// Unsupported HTTP Verbs
+/*********************/
+
+// /api/users
+// PUT 403 - Cannot edit a collection of users.
+router.put('/users', function (req, res, next) {
+  res.status(403).json({message: 'Cannot edit a collection of users.'});
+});
+
+// DELETE 403 - Cannot delete a collection of users.
+router.delete('/users', function (req, res, next) {
+  res.status(403).json({message: 'Cannot delete a collection of users.'});
 });
 
 module.exports = router;

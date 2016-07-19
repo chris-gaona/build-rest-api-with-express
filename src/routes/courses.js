@@ -16,7 +16,7 @@ router.param('id', function(req, res, next, id) {
   var query = Course.findById(id).populate('reviews');
 
   query.exec(function(err, course) {
-    if (err) {return next(err)}
+    if (err) {return next(err);}
 
     if(!course) {
       return next(new Error('can\'t find course'));
@@ -29,8 +29,9 @@ router.param('id', function(req, res, next, id) {
 
 // GET /api/courses 200 - Returns the Course "_id" and "title" properties
 router.get('/courses', function (req, res, next) {
-  Course.find(function (err, courses) {
+  Course.find({}, '_id title reviews', function (err, courses) {
     if(err) return next(err);
+
     var allCourses = {};
     allCourses.data = courses;
     res.json(allCourses);
@@ -111,6 +112,34 @@ router.put('/courses/:id', auth, function (req, res, next) {
     res.status(204);
     res.end();
   });
+});
+
+/*********************/
+// Unsupported HTTP Verbs
+/*********************/
+
+// /api/courses
+// PUT 403 - Cannot edit a collection of courses.
+router.put('/courses', function (req, res, next) {
+  res.status(403).json({message: 'Cannot edit a collection of courses.'});
+});
+
+// DELETE 403 - Cannot delete a collection of courses.
+router.delete('/courses', function (req, res, next) {
+  res.status(403).json({message: 'Cannot delete a collection of courses.'});
+});
+
+// /api/courses/:id
+// POST 405 - Use the '/api/courses' route to create a course.
+// Also include an Allow header with the value GET,PUT
+router.post('/courses/:id', function (req, res, next) {
+  res.header('Access-Control-Allow-Methods', 'GET, PUT');
+  res.status(405).json({message: 'Use the "/api/courses" route to create a course.'});
+});
+
+// DELETE 403 - Cannot delete a course.
+router.delete('/courses', function (req, res, next) {
+  res.status(403).json({message: 'Cannot delete a course.'});
 });
 
 module.exports = router;

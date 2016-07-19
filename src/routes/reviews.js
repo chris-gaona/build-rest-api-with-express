@@ -63,4 +63,37 @@ router.delete('/courses/:courseId/reviews/:id', auth, function (req, res, next) 
   res.end();
 });
 
+/*********************/
+// Unsupported HTTP Verbs
+/*********************/
+
+// /api/courses/:courseId/reviews
+// PUT 403 - Cannot edit a collection of reviews.
+router.put('/courses/:courseId/reviews', function (req, res, next) {
+  res.status(403).json({message: 'Cannot edit a collection of reviews.'});
+});
+
+// DELETE 403 - Cannot delete a collection of reviews.
+router.delete('/courses/:courseId/reviews', function (req, res, next) {
+  res.status(403).json({message: 'Cannot delete a collection of reviews.'});
+});
+
+// /api/courses/:courseId/reviews/:id
+// GET 403 - Cannot get a single review. Use the '/api/courses/:id' route instead to get the reviews for a specific course.
+router.get('/courses/:courseId/reviews/:id', function (req, res, next) {
+  res.status(403).json({message: 'Cannot get a single review. Use the "/api/courses/:id" route instead to get the reviews for a specific course.'});
+});
+
+// POST 405 - Use the '/api/courses/:courseId/reviews' route to create a review.
+// Also include an Allow header with the value DELETE
+router.post('/courses/:courseId/reviews/:id', function (req, res, next) {
+  res.header('Access-Control-Allow-Methods', 'DELETE');
+  res.status(405).json({message: 'Use the "/api/courses/:courseId/reviews" route to create a review.'});
+});
+
+// PUT 403 - Cannot edit a review.
+router.put('/courses/:courseId/reviews/:id', function (req, res, next) {
+  res.status(403).json({message: 'Cannot edit a review.'});
+});
+
 module.exports = router;

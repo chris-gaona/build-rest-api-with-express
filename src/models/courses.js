@@ -40,6 +40,10 @@ var CourseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Review'
   }]
+},
+{
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
 });
 
 CourseSchema.path('steps').validate(function(steps){
@@ -54,12 +58,12 @@ CourseSchema.path('steps').validate(function(steps){
 // Update the Course schema with an overallRating virtual property.
 // overallRating is a calculated, read only property that returns the average of all of the review ratings for this course rounded to the nearest whole number.
 // By not storing this calculated value in the database, we ensure that it's impossible for the value to get out of sync with the course's reviews.
-CourseSchema.virtual('reviews.overallRating').get(function () {
+CourseSchema.virtual('overallRating').get(function () {
   var total = 0;
   for (var i = 0; i < this.reviews.length; i++) {
-    total += this.reviews[i];
+    total += this.reviews[i].rating;
   }
-  return total / this.reviews.length;
+  return Math.ceil(total / this.reviews.length);
 });
 
 var Course = mongoose.model('Course', CourseSchema);

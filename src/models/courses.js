@@ -39,6 +39,10 @@ var CourseSchema = new mongoose.Schema({
   reviews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Review'
+  }],
+  usersWhoReviewed: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }]
 },
 {

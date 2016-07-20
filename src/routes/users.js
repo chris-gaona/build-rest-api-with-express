@@ -23,9 +23,15 @@ router.get('/users', auth, function (req, res, next) {
 // POST /api/users 201 - Creates a user, sets the Location header to "/", and returns no content
 // "message": "Validation Failed", "errors": { "property": [ { "code": "", "message": "" }, ... ] } }
 router.post('/users', function (req, res, next) {
+  console.log(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(req.body.password));
+
   if (!req.body.password || !req.body.confirmPassword){
     return res.status(400).json({
       message: "Validation Failed", errors: { property: [ { code: 400, message: "Please fill out all fields" } ] }
+    });
+  } else if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(req.body.password) === false) {
+    return res.status(400).json({
+      message: "Validation Failed", errors: { property: [ { code: 400, message: "Your password should contain at least one digit, at least one lowercase, at least one uppercase, & at least 8 digits" } ] }
     });
   } else if (req.body.password !== req.body.confirmPassword) {
     return res.status(400).json({

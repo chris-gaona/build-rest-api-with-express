@@ -47,18 +47,18 @@ var CourseSchema = new mongoose.Schema({
     ref: 'User'
   }]
 },
-{
-  toObject: { virtuals: true },
-  toJSON: { virtuals: true }
-});
+  {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+  });
 
-CourseSchema.path('steps').validate(function(steps){
-    if (!steps) {
-      return false;
-    } else if (steps.length === 0) {
-      return false;
-    }
-    return true;
+CourseSchema.path('steps').validate(function (steps) {
+  if (!steps) {
+    return false;
+  } else if (steps.length === 0) {
+    return false;
+  }
+  return true;
 }, 'Steps needs to have at least one feature');
 
 // Update the Course schema with an overallRating virtual property.

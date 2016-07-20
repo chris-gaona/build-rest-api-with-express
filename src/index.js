@@ -8,12 +8,12 @@ var jsonParser = require('body-parser').json;
 require('./models/courses');
 require('./models/reviews');
 require('./models/users');
-//MONGOOSE / MONGO Database
+// MONGOOSE / MONGO Database
 require('./database');
 
 var app = express();
 
-//ROUTES
+// ROUTES
 var routes = require('./routes');
 
 // set our port
@@ -50,6 +50,6 @@ app.use(function (err, req, res, next) {
 });
 
 // start listening on our port
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(app.get('port'), function () {
   console.log('Express server is listening on port ' + server.address().port);
 });

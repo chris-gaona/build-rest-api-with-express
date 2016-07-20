@@ -26,7 +26,7 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.methods.setPassword = function(password){
+UserSchema.methods.setPassword = function (password) {
   // Update the User model to store the user's password as a hashed value.
   var salt = bcrypt.genSaltSync(saltRounds);
   this.hashedPassword = bcrypt.hashSync(password, salt);
@@ -36,13 +36,13 @@ UserSchema.path('emailAddress').validate(function (v) {
   return Validator.isEmail(v);
 }, 'Please provide a valid email address.');
 
-UserSchema.path('emailAddress').validate(function(value, done) {
-  this.model('User').count({ emailAddress: value }, function(err, count) {
-      if (err) {
-          return done(err);
-      }
-      // If `count` is greater than zero, "invalidate"
-      done(!count);
+UserSchema.path('emailAddress').validate(function (value, done) {
+  this.model('User').count({ emailAddress: value }, function (err, count) {
+    if (err) {
+      return done(err);
+    }
+    // If `count` is greater than zero, "invalidate"
+    done(!count);
   });
 }, 'The email address you provided is already in use.');
 

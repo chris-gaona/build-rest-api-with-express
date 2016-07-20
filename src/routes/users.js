@@ -3,11 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
-var Course = require('../models/courses');
-var Review = require('../models/reviews');
 var User = require('../models/users');
-
-var courses = require('../data/data.json');
 
 var auth = require('../auth.js');
 
@@ -25,17 +21,17 @@ router.get('/users', auth, function (req, res, next) {
 router.post('/users', function (req, res, next) {
   console.log(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(req.body.password));
 
-  if (!req.body.password || !req.body.confirmPassword){
+  if (!req.body.password || !req.body.confirmPassword) {
     return res.status(400).json({
-      message: "Validation Failed", errors: { property: [ { code: 400, message: "Please fill out all fields" } ] }
+      message: 'Validation Failed', errors: { property: [ { code: 400, message: 'Please fill out all fields' } ] }
     });
   } else if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(req.body.password) === false) {
     return res.status(400).json({
-      message: "Validation Failed", errors: { property: [ { code: 400, message: "Your password should contain at least one digit, at least one lowercase, at least one uppercase, & at least 8 digits" } ] }
+      message: 'Validation Failed', errors: { property: [ { code: 400, message: 'Your password should contain at least one digit, at least one lowercase, at least one uppercase, & at least 8 digits' } ] }
     });
   } else if (req.body.password !== req.body.confirmPassword) {
     return res.status(400).json({
-      message: "Validation Failed", errors: { property: [ { code: 400, message: "Password & confirm password do not match" } ] }
+      message: 'Validation Failed', errors: { property: [ { code: 400, message: 'Password & confirm password do not match' } ] }
     });
   }
   var user = new User();
@@ -50,11 +46,11 @@ router.post('/users', function (req, res, next) {
       if (err.name === 'ValidationError') {
         if (err.errors.fullName) {
           return res.status(400).json({
-            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.fullName.message } ] }
+            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.fullName.message } ] }
           });
         } else if (err.errors.emailAddress) {
           return res.status(400).json({
-            message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.emailAddress.message } ] }
+            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.emailAddress.message } ] }
           });
         }
       } else {
@@ -66,9 +62,9 @@ router.post('/users', function (req, res, next) {
   });
 });
 
-/*********************/
+/** *******************/
 // Unsupported HTTP Verbs
-/*********************/
+/** *******************/
 
 // /api/users
 // PUT 403 - Cannot edit a collection of users.

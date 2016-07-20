@@ -30,10 +30,12 @@ var CourseSchema = new mongoose.Schema({
   steps: [{
     stepNumber: Number,
     title: {
-      type: String
+      type: String,
+      required: true
     },
     description: {
-      type: String
+      type: String,
+      required: true
     }
   }],
   reviews: [{

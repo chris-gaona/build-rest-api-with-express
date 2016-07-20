@@ -58,6 +58,7 @@ router.get('/courses/:id', function (req, res, next) {
 // POST /api/courses 201 - Creates a course, sets the Location header, and returns no content
 router.post('/courses', auth, function (req, res, next) {
   var course = new Course(req.body);
+  course.usersWhoReviewed.push(req.user);
 
   course.save(function (err) {
     console.log(err);
@@ -75,12 +76,21 @@ router.post('/courses', auth, function (req, res, next) {
           return res.status(400).json({
             message: "Validation Failed", errors: { property: [ { code: 400, message: err.errors.steps.message } ] }
           });
+        } else if (err.errors['steps.0.title']) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: 'Steps - title is required' } ] }
+          });
+        } else if (err.errors['steps.0.description']) {
+          return res.status(400).json({
+            message: "Validation Failed", errors: { property: [ { code: 400, message: 'Steps - description is required' } ] }
+          });
         }
       } else {
         return next(err);
       }
     }
     res.status(201);
+    res.location('/courses/' + course._id);
     res.end();
   });
 });

@@ -1,8 +1,25 @@
+/**
+* @module Users Model
+*/
+
 'use strict';
 
+/**
+* Requires the mongoose model
+* @requires mongoose
+*/
 var mongoose = require('mongoose');
+/**
+* Requires the validator model
+* @requires validator
+*/
 var Validator = require('validator');
+/**
+* Requires the bcrypt model
+* @requires bcrypt
+*/
 var bcrypt = require('bcrypt');
+// creates salt rounds
 var saltRounds = 10;
 
 // User
@@ -11,6 +28,7 @@ var saltRounds = 10;
 // emailAddress (String)
 // hashedPassword (String)
 
+// create User mongoose schema
 var UserSchema = new mongoose.Schema({
   fullName: {
     type: String,
@@ -26,16 +44,24 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
+// creates instance method to hash password for storage in database
+/**
+* @function setPassword
+* @description The setPassword function creates the hash based on the password
+* @param {string} password - the password to hash
+*/
 UserSchema.methods.setPassword = function (password) {
   // Update the User model to store the user's password as a hashed value.
   var salt = bcrypt.genSaltSync(saltRounds);
   this.hashedPassword = bcrypt.hashSync(password, salt);
 };
 
+// adds custom validation to emailAddress to make sure it's a valid email address
 UserSchema.path('emailAddress').validate(function (v) {
   return Validator.isEmail(v);
 }, 'Please provide a valid email address.');
 
+// add custom validation to emailAddress to make sure the email is not already taken
 UserSchema.path('emailAddress').validate(function (value, done) {
   this.model('User').count({ emailAddress: value }, function (err, count) {
     if (err) {

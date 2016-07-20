@@ -1,5 +1,13 @@
+/**
+* @module Reviews Model
+*/
+
 'use strict';
 
+/**
+* Requires the mongoose model
+* @requires mongoose
+*/
 var mongoose = require('mongoose');
 
 // Review
@@ -9,6 +17,7 @@ var mongoose = require('mongoose');
 // rating (Number)
 // review (String)
 
+// creates Review mongoose schema
 var ReviewSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,

@@ -1,5 +1,13 @@
+/**
+* @module Courses Mongoose Model
+*/
+
 'use strict';
 
+/**
+* Requires the mongoose module
+* @requires mongoose
+*/
 var mongoose = require('mongoose');
 
 // Course
@@ -12,6 +20,8 @@ var mongoose = require('mongoose');
 // steps (Array of objects that include stepNumber (Number), title (String) and description (String) properties)
 // reviews (Array of ObjectId values, _id values from the reviews collection)
 
+// creates course mongoose schema
+// adds toObject: { virtuals: true }, & toJSON: { virtuals: true } in order to add virtuals in results
 var CourseSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -52,6 +62,7 @@ var CourseSchema = new mongoose.Schema({
     toJSON: { virtuals: true }
   });
 
+// adds custom validation to steps to make sure there is at least one step
 CourseSchema.path('steps').validate(function (steps) {
   if (!steps) {
     return false;

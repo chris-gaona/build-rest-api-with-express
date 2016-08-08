@@ -83,7 +83,7 @@ router.post('/users', function (req, res, next) {
           errorArray.push({ code: 400, message: err.errors.emailAddress.message });
         }
 
-        var errorMessages = { message: 'Validation Failed', errors: { property: errorArray}};
+        var errorMessages = { message: 'Validation Failed', errors: { property: errorArray } };
 
         return res.status(400).json(errorMessages);
       } else {

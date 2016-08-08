@@ -25,6 +25,7 @@
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
     "express": "^4.13.4",
+    "express-session": "^1.14.0",
     "jquery": "^2.2.2",
     "mongoose": "^4.5.4",
     "mongoose-seeder": "^1.2.1",

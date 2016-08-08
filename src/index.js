@@ -15,6 +15,9 @@ var express = require('express');
 * @requires morgan
 */
 var morgan = require('morgan');
+
+
+var session = require('express-session');
 /**
 * Requires the jsonParser module
 * @requires jsonParser
@@ -41,6 +44,13 @@ require('./database');
 
 // sets up initial express app
 var app = express();
+
+// use session for tracking session
+app.use(session({
+  secret: 'course',
+  resave: true,
+  saveUninitialized: false
+}));
 
 // ROUTES
 var routes = require('./routes');

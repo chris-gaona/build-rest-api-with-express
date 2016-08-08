@@ -15,9 +15,6 @@ var express = require('express');
 * @requires morgan
 */
 var morgan = require('morgan');
-
-
-var session = require('express-session');
 /**
 * Requires the jsonParser module
 * @requires jsonParser

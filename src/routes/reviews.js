@@ -74,6 +74,8 @@ router.post('/courses/:courseId/reviews', auth, function (req, res, next) {
         }
         // send 201 status
         res.status(201);
+        // sets Location header
+        res.location('/courses/' + course._id);
         res.end();
       });
     }

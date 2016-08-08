@@ -56,6 +56,38 @@ UserSchema.methods.setPassword = function (password) {
   this.hashedPassword = bcrypt.hashSync(password, salt);
 };
 
+// ADDED NEW FROM WATCHING TREEHOUSE AUTHENTICATION VIDEO...WANT TO KEEP IT HERE FOR REFERENCE
+// UserSchema.static.authenticate = function (email, password, callback) {
+//   User.findOne({ emailAddress: email })
+//   .exec(function (err, user) {
+//     if (err) {
+//       return callback(err);
+//     } else if (!user) {
+//       var error = new Error('User not found.');
+//       error.status = 401;
+//       return callback(error);
+//     }
+//     bcrypt.compare(password, user.hashedPassword, function (err, result) {
+//       if (result === true) {
+//         return callback(null, user);
+//       } else {
+//         return callback();
+//       }
+//     });
+//   });
+// };
+//
+// UserSchema.pre('save', function (next) {
+//   var user = this;
+//   bcrypt.hash(user.password, 10, function (err, hash) {
+//     if (err) return next(err);
+//
+//     user.hashedPassword = hash;
+//     next();
+//   });
+// });
+// END
+
 // adds custom validation to emailAddress to make sure it's a valid email address
 UserSchema.path('emailAddress').validate(function (v) {
   return Validator.isEmail(v);

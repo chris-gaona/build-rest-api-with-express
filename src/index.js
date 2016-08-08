@@ -45,13 +45,6 @@ require('./database');
 // sets up initial express app
 var app = express();
 
-// use session for tracking session
-app.use(session({
-  secret: 'course',
-  resave: true,
-  saveUninitialized: false
-}));
-
 // ROUTES
 var routes = require('./routes');
 

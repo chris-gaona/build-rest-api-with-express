@@ -73,15 +73,19 @@ router.post('/users', function (req, res, next) {
     if (err) {
       // check for validation errors
       if (err.name === 'ValidationError') {
+        var errorArray = [];
+
         if (err.errors.fullName) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.fullName.message } ] }
-          });
-        } else if (err.errors.emailAddress) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.emailAddress.message } ] }
-          });
+          errorArray.push({ code: 400, message: err.errors.fullName.message });
         }
+
+        if (err.errors.emailAddress) {
+          errorArray.push({ code: 400, message: err.errors.emailAddress.message });
+        }
+
+        var errorMessages = { message: 'Validation Failed', errors: { property: errorArray}};
+
+        return res.status(400).json(errorMessages);
       } else {
         // else send error to error handler
         return next(err);
@@ -89,6 +93,8 @@ router.post('/users', function (req, res, next) {
     }
     // send 201 status
     res.status(201);
+    // sets Location header
+    res.location('/');
     res.end();
   });
 });

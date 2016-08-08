@@ -99,27 +99,32 @@ router.post('/courses', auth, function (req, res, next) {
     if (err) {
       // check for validation errors
       if (err.name === 'ValidationError') {
+        var errorArray = [];
+
         if (err.errors.title) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.title.message } ] }
-          });
-        } else if (err.errors.description) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.description.message } ] }
-          });
-        } else if (err.errors.steps) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.steps.message } ] }
-          });
-        } else if (err.errors['steps.0.title']) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: 'Steps - title is required' } ] }
-          });
-        } else if (err.errors['steps.0.description']) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: 'Steps - description is required' } ] }
-          });
+          errorArray.push({ code: 400, message: err.errors.title.message });
         }
+
+        if (err.errors.description) {
+          errorArray.push({ code: 400, message: err.errors.description.message });
+
+        }
+
+        if (err.errors.steps) {
+          errorArray.push({ code: 400, message: err.errors.steps.message });
+        }
+
+        if (err.errors['steps.0.title']) {
+          errorArray.push({ code: 400, message: err.errors['steps.0.title'].message });
+        }
+
+        if (err.errors['steps.0.description']) {
+          errorArray.push({ code: 400, message: err.errors['steps.0.description'].message });
+        }
+
+        var errorMessages = { message: 'Validation Failed', errors: { property: errorArray}};
+
+        return res.status(400).json(errorMessages);
       } else {
         // else send the error to the error handler
         return next(err);
@@ -141,19 +146,23 @@ router.put('/courses/:id', auth, function (req, res, next) {
     if (err) {
       // check for validatin errors
       if (err.name === 'ValidationError') {
+        var errorArray = [];
+
         if (err.errors.title) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.title.message } ] }
-          });
-        } else if (err.errors.description) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.description.message } ] }
-          });
-        } else if (err.errors.steps) {
-          return res.status(400).json({
-            message: 'Validation Failed', errors: { property: [ { code: 400, message: err.errors.steps.message } ] }
-          });
+          errorArray.push({ code: 400, message: err.errors.title.message });
         }
+
+        if (err.errors.description) {
+          errorArray.push({ code: 400, message: err.errors.description.message });
+        }
+
+        if (err.errors.steps) {
+          errorArray.push({ code: 400, message: err.errors.steps.message });
+        }
+
+        var errorMessages = { message: 'Validation Failed', errors: { property: errorArray}};
+
+        return res.status(400).json(errorMessages);
       } else {
         // else send the error to the error handler
         return next(err);
